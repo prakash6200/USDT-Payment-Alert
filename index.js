@@ -1,6 +1,8 @@
 const ethers = require("ethers");
 const nodeProvider = 'https://rpc.ankr.com/bsc'; // Full node
+const ethProvider = "https://mainnet.infura.io/v3/493cdb44d6044381a4582fb590dbc66a"
 const recepientAddress = "0x774d36b8D1C10ec93fE0Cc33DCc6D764ABb02c67";
+
 const ABI = 
 [
     {
@@ -660,12 +662,25 @@ const ABI =
   ]
 
 const customHttpProvider = new ethers.providers.JsonRpcProvider(nodeProvider);
+const ethCustomHttpProvider = new ethers.providers.JsonRpcProvider(ethProvider);
+
 const contractAddress = "0x55d398326f99059fF775485246999027B3197955";
+const usdtEthContract = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 const contract = new ethers.Contract(contractAddress, ABI, customHttpProvider);
+const ethcontract = new ethers.Contract(usdtEthContract, ABI, ethCustomHttpProvider);
 
+// Binance USDT
 contract.on("Transfer", async (from, to, value, event) => {   
-    console.log(from, to, value, event); // remove this console.log
+    // console.log(from, to, value, event); // remove this console.log
+    if(to.toLowerCase() === recepientAddress.toLowerCase()) {
+        makeAlert(from, to, value, event)
+    }
+});
+
+// Ethereum USDT
+ethcontract.on("Transfer", async (from, to, value, event) => {   
+    // console.log(from, to, value, event); // remove this console.log
     if(to.toLowerCase() === recepientAddress.toLowerCase()) {
         makeAlert(from, to, value, event)
     }
