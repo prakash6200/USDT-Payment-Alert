@@ -15,7 +15,6 @@
   "author Email": "prakashkumar97068@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@noble/secp256k1": "^2.1.0",
     "ethers": "^5.7.2",
     "tronweb": "^4.0.0"
   }
