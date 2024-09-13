@@ -1,0 +1,19 @@
+{
+  "name": "first",
+  "version": "1.0.0",
+  "description": "Received Payment Alert",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git remote add origin https://github.com/prakash6200/USDT-Payment-Alert.git"
+  },
+  "author": "Prakash kumar",
+  "author Email": "prakashkumar97068@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^5.7.2"
+  }
+}
