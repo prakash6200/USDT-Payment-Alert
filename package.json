@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Received Payment Alert",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "npm test"
   },
@@ -14,6 +15,8 @@
   "author Email": "prakashkumar97068@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "ethers": "^5.7.2"
+    "@noble/secp256k1": "^2.1.0",
+    "ethers": "^5.7.2",
+    "tronweb": "^4.0.0"
   }
 }
