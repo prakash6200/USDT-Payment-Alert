@@ -672,54 +672,84 @@ const contractAddress = "0x55d398326f99059fF775485246999027B3197955";
 const usdtEthContract = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 const contract = new ethers.Contract(contractAddress, ABI, customHttpProvider);
-const ethcontract = new ethers.Contract(usdtEthContract, ABI, ethCustomHttpProvider);
+// const ethcontract = new ethers.Contract(usdtEthContract, ABI, ethCustomHttpProvider);
 
 // Binance USDT
-contract.on("Transfer", async (from, to, value, event) => {   
-    console.log(from, to, Number(value), "From Binance"); // remove this console.log
-    if(to.toLowerCase() === recepientAddress.toLowerCase()) {
-        makeAlert(from, to, value, event)
-    }
-});
+// contract.on("Transfer", async (from, to, value, event) => {   
+//     console.log(Number(value)); // remove this console.log
+//     if(to.toLowerCase() === recepientAddress.toLowerCase()) {
+//         makeAlert(from, to, value, event)
+//     }
+// });
 
-// Ethereum USDT
-ethcontract.on("Transfer", async (from, to, value, event) => {   
-    console.log(from, to, Number(value), "From Ethereum"); // remove this console.log
-    if(to.toLowerCase() === recepientAddress.toLowerCase()) {
-        makeAlert(from, to, value, event)
-    }
-});
+let ethcontract;
+const connectContract = (contractAddress, ABI, provider, recepientAddress, makeAlert) => {
+  // Create a new instance of ethers.Contract
+  ethcontract = new ethers.Contract(contractAddress, ABI, provider);
+
+  // Listen to the "Transfer" event on the contract
+  ethcontract.on("Transfer", async (from, to, value, event) => {   
+      console.log(Number(value)); // remove this console.log
+      if (to.toLowerCase() === recepientAddress.toLowerCase()) {
+          await makeAlert(from, to, value, event);
+      }
+  });
+
+  console.log("Connected to Transfer event listener.");
+};
+
+const disconnectContract = () => {
+  if (ethcontract) {
+      ethcontract.removeAllListeners("Transfer"); // Remove all listeners for the "Transfer" event
+      console.log("Disconnected from Transfer event listener.");
+  }
+};
+
+
+connectContract(usdtEthContract, ABI, ethCustomHttpProvider, recepientAddress, makeAlert);
+setTimeout(() => {
+  disconnectContract();
+}, 60000);
+
+
+// // Ethereum USDT
+// ethcontract.on("Transfer", async (from, to, value, event) => {   
+//     // console.log(from, to, Number(value), "From Ethereum"); // remove this console.log
+//     if(to.toLowerCase() === recepientAddress.toLowerCase()) {
+//         makeAlert(from, to, value, event)
+//     }
+// });
 
 async function makeAlert(from, to, value, event){
     // implement alert function HERE
 }
 
-async function get() {
-  const tronWeb = new TronWeb({
-      fullHost: "https://api.trongrid.io",
-  });
+// async function get() {
+//   const tronWeb = new TronWeb({
+//       fullHost: "https://api.trongrid.io",
+//   });
 
-  try {
-      const contract = await tronWeb.contract().at(trc20ContractAddress);
-      if (contract) {
-          contract.Transfer().watch((err, event) => {
-              if (err) {
-                  return console.error('Error with "Transfer" event:', err); 
-              }
-              console.group('New event received');
-              console.log('- Contract Address:', event.contract);
-              console.log('- Event Name:', event.name);
-              console.log('- Transaction:', event.transaction, "Fron Tron");
-              // console.log('- Block number:', event.block);
-              // console.log('- Result:', event.result, '\n');
-              // console.groupEnd();
-          });
-      } else {
-          console.error('Unable to find the contract.');
-      }
-  } catch (error) {
-      console.error('An error occurred:', error);
-  }
-}
+//   try {
+//       const contract = await tronWeb.contract().at(trc20ContractAddress);
+//       if (contract) {
+//           contract.Transfer().watch((err, event) => {
+//               if (err) {
+//                   return console.error('Error with "Transfer" event:', err); 
+//               }
+//               console.group('New event received');
+//               console.log('- Contract Address:', event.contract);
+//               console.log('- Event Name:', event.name);
+//               console.log('- Transaction:', event.transaction, "Fron Tron");
+//               // console.log('- Block number:', event.block);
+//               // console.log('- Result:', event.result, '\n');
+//               // console.groupEnd();
+//           });
+//       } else {
+//           console.error('Unable to find the contract.');
+//       }
+//   } catch (error) {
+//       console.error('An error occurred:', error);
+//   }
+// }
 
-get();
+// get();
